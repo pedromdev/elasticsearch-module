@@ -1,5 +1,6 @@
 # Composer files
 composer.phar
+composer.lock
 vendor/
 
 # Local configs
@@ -9,10 +10,7 @@ config/autoload/*.local.php
 *.mo
 
 # Data
-data/logs/
-data/cache/
-data/sessions/
-data/tmp/
+data/
 temp/
 
 #Doctrine 2
@@ -23,3 +21,7 @@ data/DoctrineORMModule/cache/
 # Legacy ZF1
 demos/
 extras/documentation
+
+# Other ignored files
+nbproject/
+tests/tmp/
