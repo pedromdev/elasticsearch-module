@@ -2,18 +2,19 @@
 
 namespace ElasticsearchModuleTest\Service;
 
-use ElasticsearchModule\Service\LoggerFactory;
+use ElasticsearchModule\Service\TracerFactory;
 
 /**
  * @author Pedro Alves <pedro.m.develop@gmail.com>
  */
-class LoggerFactoryTest extends AbstractLogFactoryTest
+class TracerFactoryTest extends AbstractLogFactoryTest
 {
+    
     /**
      * {@inheritDoc}
      */
     protected function getLogFactory($name)
     {
-        return new LoggerFactory($name);
+        return new TracerFactory($name);
     }
 }
