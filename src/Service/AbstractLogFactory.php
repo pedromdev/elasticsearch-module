@@ -34,7 +34,7 @@ abstract class AbstractLogFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $config = $this->getConfigurationOrThrowException($serviceLocator);
-        $logName = $config['elasticsearch']['log'][$this->name][$this->getKey()];
+        $logName = $config['elasticsearch']['loggers'][$this->name][$this->getKey()];
         return $this->getLoggerOrThrowException($serviceLocator, $logName);
     }
     
@@ -64,8 +64,8 @@ abstract class AbstractLogFactory implements FactoryInterface
     {
         $config = $serviceLocator->get('Config');
         
-        if (!isset($config['elasticsearch']['log'][$this->name][$this->getKey()])) {
-            throw new ServiceNotCreatedException("elasticserach.log.{$this->name} could not be found");
+        if (!isset($config['elasticsearch']['loggers'][$this->name][$this->getKey()])) {
+            throw new ServiceNotCreatedException("elasticserach.loggers.{$this->name} could not be found");
         }
         return $config;
     }

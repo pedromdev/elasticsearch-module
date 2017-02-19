@@ -12,7 +12,7 @@ return [
                 'pool' => StaticConnectionPool::class,
             ],
         ],
-        'log' => [
+        'loggers' => [
             'default' => [
                 'logger' => NullLogger::class,
                 'tracer' => NullLogger::class,
