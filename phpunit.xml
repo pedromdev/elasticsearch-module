@@ -1,0 +1,23 @@
+<phpunit
+    bootstrap="./vendor/autoload.php"
+    colors="true"
+    convertNoticesToExceptions="true"
+    convertWarningsToExceptions="true"
+    convertErrorsToExceptions="true"
+    syntaxCheck="true"
+    verbose="true">
+    <testsuites>
+        <testsuite name="Elasticsearch Module">
+            <directory>./tests</directory>
+        </testsuite>
+    </testsuites>
+    <filter>
+        <whitelist>
+            <directory suffix=".php">./src</directory>
+        </whitelist>
+    </filter>
+    <logging>
+        <log type="coverage-html" target="./tests/tmp/coverage" lowUpperBound="35" highLowerBound="70"/>
+        <log type="coverage-text" target="php://stdout" showUncoveredFiles="false"/>
+    </logging>
+</phpunit>
