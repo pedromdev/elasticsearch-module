@@ -18,5 +18,13 @@ return [
                 'tracer' => NullLogger::class,
             ],
         ],
+        'handler' => [
+            'default' => [
+                'params' => [
+                    'multi_handler' => [],
+                    'single_handler' => [],
+                ],
+            ],
+        ],
     ],
 ];
