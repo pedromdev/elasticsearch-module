@@ -4,38 +4,29 @@ namespace ElasticsearchModule\Service;
 
 use Psr\Log\LoggerInterface;
 use Zend\ServiceManager\Exception\ServiceNotCreatedException;
-use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * @author Pedro Alves <pedro.m.develop@gmail.com>
  */
-abstract class AbstractLogFactory implements FactoryInterface
+abstract class AbstractLogFactory extends AbstractFactory
 {
+    
     /**
-     * @var string
+     * {@inheritDoc}
      */
-    private $name;
-
-    /**
-     * @param string $name
-     */
-    public function __construct($name)
+    public function create(ServiceLocatorInterface $serviceLocator, $config)
     {
-        $this->name = $name;
+        $logName = $config[$this->getKey()];
+        return $this->getLoggerOrThrowException($serviceLocator, $logName);
     }
 
     /**
      * {@inheritDoc}
-     * 
-     * @param ServiceLocatorInterface $serviceLocator
-     * @return LoggerInterface
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function getServiceType()
     {
-        $config = $this->getConfigurationOrThrowException($serviceLocator);
-        $logName = $config['elasticsearch']['loggers'][$this->name][$this->getKey()];
-        return $this->getLoggerOrThrowException($serviceLocator, $logName);
+        return 'loggers';
     }
     
     /**
@@ -53,21 +44,6 @@ abstract class AbstractLogFactory implements FactoryInterface
         }
         
         throw new ServiceNotCreatedException("There is no '$logName' log");
-    }
-    
-    /**
-     * @param ServiceLocatorInterface $serviceLocator
-     * @return array
-     * @throws ServiceNotCreatedException
-     */
-    private function getConfigurationOrThrowException(ServiceLocatorInterface $serviceLocator)
-    {
-        $config = $serviceLocator->get('Config');
-        
-        if (!isset($config['elasticsearch']['loggers'][$this->name][$this->getKey()])) {
-            throw new ServiceNotCreatedException("elasticserach.loggers.{$this->name} could not be found");
-        }
-        return $config;
     }
     
     /**
