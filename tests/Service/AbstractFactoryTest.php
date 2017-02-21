@@ -23,6 +23,9 @@ abstract class AbstractFactoryTest extends AbstractTest
             ->getMockForAbstractClass();
     }
     
+    /**
+     * @param PHPUnit_Framework_MockObject_MockObject $mock
+     */
     protected function mockConfigurationService(PHPUnit_Framework_MockObject_MockObject $mock)
     {
         $mock->expects($this->any())
@@ -31,6 +34,11 @@ abstract class AbstractFactoryTest extends AbstractTest
             ->willReturn($this->getConfig());
     }
     
+    /**
+     * @param PHPUnit_Framework_MockObject_MockObject $mock
+     * @param string $method
+     * @param array $map
+     */
     protected function mockMappedReturn(PHPUnit_Framework_MockObject_MockObject $mock, $method, array $map)
     {
         $mock->expects($this->any())
