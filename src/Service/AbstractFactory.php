@@ -53,4 +53,12 @@ abstract class AbstractFactory implements FactoryInterface
         
         return $this->create($serviceLocator, $config['elasticsearch'][$serviceType][$this->name]);
     }
+    
+    /**
+     * @return string
+     */
+    protected function getName()
+    {
+        return $this->name;
+    }
 }
