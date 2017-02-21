@@ -35,7 +35,7 @@ abstract class AbstractFactory implements FactoryInterface
      * @param ServiceLocatorInterface $serviceLocator
      * @param array|ArrayObject $config
      */
-    abstract public function create(ServiceLocatorInterface $serviceLocator, $config);
+    abstract protected function create(ServiceLocatorInterface $serviceLocator, $config);
     
     /**
      * @param ServiceLocatorInterface $serviceLocator

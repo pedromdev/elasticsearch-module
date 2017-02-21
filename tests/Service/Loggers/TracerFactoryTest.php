@@ -1,8 +1,9 @@
 <?php
 
-namespace ElasticsearchModuleTest\Service;
+namespace ElasticsearchModuleTest\Service\Loggers;
 
-use ElasticsearchModule\Service\TracerFactory;
+use ElasticsearchModule\Service\Loggers\TracerFactory;
+use ElasticsearchModuleTest\Service\AbstractLogFactoryTest;
 
 /**
  * @author Pedro Alves <pedro.m.develop@gmail.com>

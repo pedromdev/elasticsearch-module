@@ -15,7 +15,7 @@ abstract class AbstractLogFactory extends AbstractFactory
     /**
      * {@inheritDoc}
      */
-    public function create(ServiceLocatorInterface $serviceLocator, $config)
+    protected function create(ServiceLocatorInterface $serviceLocator, $config)
     {
         $logName = $config[$this->getKey()];
         return $this->getLoggerOrThrowException($serviceLocator, $logName);

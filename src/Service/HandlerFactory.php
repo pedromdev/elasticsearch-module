@@ -14,7 +14,7 @@ class HandlerFactory extends AbstractFactory
     /**
      * {@inheritDoc}
      */
-    public function create(ServiceLocatorInterface $serviceLocator, $config)
+    protected function create(ServiceLocatorInterface $serviceLocator, $config)
     {
         return ClientBuilder::defaultHandler(
             $this->getMultiHandlerParams($serviceLocator, $config),

@@ -1,6 +1,8 @@
 <?php
 
-namespace ElasticsearchModule\Service;
+namespace ElasticsearchModule\Service\Loggers;
+
+use ElasticsearchModule\Service\AbstractLogFactory;
 
 /**
  * @author Pedro Alves <pedro.m.develop@gmail.com>
