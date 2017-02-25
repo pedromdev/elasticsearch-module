@@ -3,7 +3,7 @@
 namespace ElasticsearchModuleTest\Service;
 
 use ArrayObject;
-use Elasticsearch\Connections\ConnectionInterface;
+use Elasticsearch\Connections\ConnectionFactoryInterface;
 use Elasticsearch\Serializers\SmartSerializer;
 use ElasticsearchModule\Service\ConnectionFactory;
 use ElasticsearchModule\Service\HandlerFactory;
@@ -34,7 +34,7 @@ class ConnectionFactoryTest extends AbstractFactoryTest
         
         $connectionFactory = $factory->createService($mock2);
         
-        $this->assertInstanceOf(ConnectionInterface::class, $connectionFactory);
+        $this->assertInstanceOf(ConnectionFactoryInterface::class, $connectionFactory);
     }
     
     /**
@@ -48,20 +48,11 @@ class ConnectionFactoryTest extends AbstractFactoryTest
         $this->mockMappedReturn($mock2, 'get', [
             'Config' => [
                 'elasticsearch' => [
-                    'connection' => [
+                    'connection_factory' => [
                         'default' => [
                             'factory' => InvalidConnectionFactory::class,
                             'handler' => 'elasticsearch.handler.default',
                             'params' => [],
-                            'host_details' => [
-                                'host' => 'localhost',
-                                'port' => 9200,
-                                'scheme' => 'http',
-                                'user' => 'user',
-                                'pass' => 'pass',
-                                'pass' => 'pass',
-                                'path' => null,
-                            ],
                             'serializer' => SmartSerializer::class,
                             'loggers' => 'elasticsearch.loggers.default',
                         ],

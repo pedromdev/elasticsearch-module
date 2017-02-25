@@ -4,7 +4,6 @@ namespace ElasticsearchModule\Service;
 
 use ArrayObject;
 use Elasticsearch\Connections\ConnectionFactoryInterface;
-use Elasticsearch\Serializers\SerializerInterface;
 use Zend\ServiceManager\Exception\ServiceNotCreatedException;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -33,7 +32,7 @@ class ConnectionFactory extends AbstractFactory
                 ConnectionFactoryInterface::class
             ));
         }
-        return $connectionFactory->create($config['host_details']);
+        return $connectionFactory;
     }
 
     /**
@@ -41,7 +40,7 @@ class ConnectionFactory extends AbstractFactory
      */
     public function getServiceType()
     {
-        return 'connection';
+        return 'connection_factory';
     }
     
     /**
