@@ -22,7 +22,7 @@ class ConnectionFactory extends AbstractFactory
         $factoryName = $config['factory'];
         $handler = $serviceLocator->get($config['handler']);
         $loggers = $serviceLocator->get($config['loggers']);
-        $serializer = $this->getSerializerFromConfiguration($serviceLocator, $config);
+        $serializer = $this->getServiceOrClassObject($serviceLocator, $config['serializer']);
         $params = $this->getConnectionParametersFromConfiguration($config);
         $connectionFactory = new $factoryName($handler, $params, $serializer, $loggers['logger'], $loggers['tracer']);
         
@@ -42,17 +42,6 @@ class ConnectionFactory extends AbstractFactory
     public function getServiceType()
     {
         return 'connection';
-    }
-    
-    /**
-     * @param ServiceLocatorInterface $serviceLocator
-     * @param array|ArrayObject $config
-     * @return SerializerInterface
-     */
-    private function getSerializerFromConfiguration(ServiceLocatorInterface $serviceLocator, $config)
-    {
-        return $serviceLocator->has($config['serializer']) ?
-            $serviceLocator->get($config['serializer']) : new $config['serializer'];
     }
     
     /**

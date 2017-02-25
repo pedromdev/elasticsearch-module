@@ -67,12 +67,8 @@ class HandlerFactory extends AbstractFactory
     private function createFactoryInConfig(ServiceLocatorInterface $serviceLocator, $handlerParams, $factoryKey)
     {
         if ($this->hasHandlerFactoryOption($handlerParams, $factoryKey)) {
-            if ($serviceLocator->has($handlerParams[$factoryKey])) {
-                $handlerParams[$factoryKey] = $serviceLocator->get($handlerParams[$factoryKey]);
-            } else if (class_exists($handlerParams[$factoryKey])) {
-                $factoryClass = $handlerParams[$factoryKey];
-                $handlerParams[$factoryKey] = new $factoryClass();
-            }
+            $serviceOrClass = $handlerParams[$factoryKey];
+            $handlerParams[$factoryKey] = $this->getServiceOrClassObject($serviceLocator, $serviceOrClass);
             
             if (!is_callable($handlerParams[$factoryKey])) {
                 unset($handlerParams[$factoryKey]);

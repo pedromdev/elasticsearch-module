@@ -55,6 +55,21 @@ abstract class AbstractFactory implements FactoryInterface
     }
     
     /**
+     * @param ServiceLocatorInterface $serviceLocator
+     * @param string $serviceOrClass
+     * @return mixed
+     */
+    protected function getServiceOrClassObject(ServiceLocatorInterface $serviceLocator, $serviceOrClass)
+    {
+        if ($serviceLocator->has($serviceOrClass)) {
+            return $serviceLocator->get($serviceOrClass);
+        } else if (class_exists($serviceOrClass)) {
+            return new $serviceOrClass();
+        }
+        return null;
+    }
+    
+    /**
      * @return string
      */
     protected function getName()

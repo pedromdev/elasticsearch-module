@@ -37,13 +37,12 @@ abstract class AbstractLogFactory extends AbstractFactory
      */
     private function getLoggerOrThrowException(ServiceLocatorInterface $serviceLocator, $logName)
     {
-        if ($serviceLocator->has($logName)) {
-            return $serviceLocator->get($logName);
-        } else if (class_exists($logName)) {
-            return new $logName();
-        }
+        $logger = $this->getServiceOrClassObject($serviceLocator, $logName);
         
-        throw new ServiceNotCreatedException("There is no '$logName' log");
+        if (is_null($logger)) {
+            throw new ServiceNotCreatedException("There is no '$logName' log");
+        }
+        return $logger;
     }
     
     /**
