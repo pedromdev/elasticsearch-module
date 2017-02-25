@@ -1,6 +1,7 @@
 <?php
 
-use Elasticsearch\ConnectionPool\StaticConnectionPool;
+use Elasticsearch\ConnectionPool\Selectors\RoundRobinSelector;
+use Elasticsearch\ConnectionPool\StaticNoPingConnectionPool;
 use Elasticsearch\Connections\ConnectionFactory;
 use Elasticsearch\Serializers\SmartSerializer;
 use ElasticsearchModule\Service\Loggers\LoggerFactory;
@@ -9,12 +10,6 @@ use Psr\Log\NullLogger;
 
 return [
     'elasticsearch' => [
-        'connection' => [
-            'default' => [
-                'factory' => ConnectionFactory::class,
-                'pool' => StaticConnectionPool::class,
-            ],
-        ],
         'loggers' => [
             'default' => [
                 'factories' => [
@@ -40,6 +35,15 @@ return [
                 'params' => [],
                 'serializer' => SmartSerializer::class,
                 'loggers' => 'elasticsearch.loggers.default',
+            ],
+        ],
+        'connection_pool' => [
+            'default' => [
+                'class' => StaticNoPingConnectionPool::class,
+                'selector' => RoundRobinSelector::class,
+                'connection_factory' => 'elasticsearch.connection_factory.default',
+                'parameters' => [],
+                'hosts' => [],
             ],
         ],
     ],
