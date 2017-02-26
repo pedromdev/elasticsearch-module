@@ -4,38 +4,29 @@ namespace ElasticsearchModule\Service;
 
 use Psr\Log\LoggerInterface;
 use Zend\ServiceManager\Exception\ServiceNotCreatedException;
-use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * @author Pedro Alves <pedro.m.develop@gmail.com>
  */
-abstract class AbstractLogFactory implements FactoryInterface
+abstract class AbstractLogFactory extends AbstractFactory
 {
+    
     /**
-     * @var string
+     * {@inheritDoc}
      */
-    private $name;
-
-    /**
-     * @param string $name
-     */
-    public function __construct($name)
+    protected function create(ServiceLocatorInterface $serviceLocator, $config)
     {
-        $this->name = $name;
+        $logName = $config[$this->getKey()];
+        return $this->getLoggerOrThrowException($serviceLocator, $logName);
     }
 
     /**
      * {@inheritDoc}
-     * 
-     * @param ServiceLocatorInterface $serviceLocator
-     * @return LoggerInterface
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function getServiceType()
     {
-        $config = $this->getConfigurationOrThrowException($serviceLocator);
-        $logName = $config['elasticsearch']['log'][$this->name][$this->getKey()];
-        return $this->getLoggerOrThrowException($serviceLocator, $logName);
+        return 'loggers';
     }
     
     /**
@@ -46,28 +37,12 @@ abstract class AbstractLogFactory implements FactoryInterface
      */
     private function getLoggerOrThrowException(ServiceLocatorInterface $serviceLocator, $logName)
     {
-        if ($serviceLocator->has($logName)) {
-            return $serviceLocator->get($logName);
-        } else if (class_exists($logName)) {
-            return new $logName();
-        }
+        $logger = $this->getServiceOrClassObject($serviceLocator, $logName);
         
-        throw new ServiceNotCreatedException("There is no '$logName' log");
-    }
-    
-    /**
-     * @param ServiceLocatorInterface $serviceLocator
-     * @return array
-     * @throws ServiceNotCreatedException
-     */
-    private function getConfigurationOrThrowException(ServiceLocatorInterface $serviceLocator)
-    {
-        $config = $serviceLocator->get('Config');
-        
-        if (!isset($config['elasticsearch']['log'][$this->name][$this->getKey()])) {
-            throw new ServiceNotCreatedException("elasticserach.log.{$this->name} could not be found");
+        if (is_null($logger)) {
+            throw new ServiceNotCreatedException("There is no '$logName' log");
         }
-        return $config;
+        return $logger;
     }
     
     /**

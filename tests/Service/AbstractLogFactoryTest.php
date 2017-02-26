@@ -38,7 +38,7 @@ abstract class AbstractLogFactoryTest extends AbstractFactoryTest
     
     /**
      * @expectedException \Zend\ServiceManager\Exception\ServiceNotCreatedException
-     * @expectedExceptionMessage elasticserach.log.exception could not be found
+     * @expectedExceptionMessage elasticserach.loggers.exception could not be found
      */
     public function testThrowsExceptionWhenNotFindTheLogConfig()
     {
@@ -59,7 +59,7 @@ abstract class AbstractLogFactoryTest extends AbstractFactoryTest
         $this->mockMappedReturn($mock, 'get', [
             'Config' => [
                 'elasticsearch' => [
-                    'log' => [
+                    'loggers' => [
                         'unit-test' => [
                             'logger' => 'not-found',
                             'tracer' => 'not-found',
