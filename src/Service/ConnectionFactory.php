@@ -6,6 +6,7 @@ use ArrayObject;
 use Elasticsearch\Connections\ConnectionFactoryInterface;
 use Zend\ServiceManager\Exception\ServiceNotCreatedException;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\Stdlib\ArrayObject as ZendArrayObject;
 
 /**
  * @author Pedro Alves <pedro.m.develop@gmail.com>
@@ -44,7 +45,7 @@ class ConnectionFactory extends AbstractFactory
     }
     
     /**
-     * @param array|ArrayObject $config
+     * @param array|ArrayObject|ZendArrayObject $config
      * @return array
      */
     private function getConnectionParametersFromConfiguration($config)
