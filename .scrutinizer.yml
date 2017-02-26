@@ -1,0 +1,15 @@
+before_commands:
+    - "composer update --prefer-source"
+
+tools:
+    php_code_coverage: true
+    php_code_sniffer:
+        enabled: true
+        config:
+            standard: PSR2
+        filter:
+            paths: ["src/*", "tests/*"]
+    php_analyzer: true
+    php_analyzer:
+        filter:
+            paths: ["src/*", "tests/*"]
