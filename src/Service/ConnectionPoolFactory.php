@@ -9,6 +9,7 @@ use Elasticsearch\Connections\ConnectionInterface;
 use Zend\ServiceManager\Exception\InvalidArgumentException;
 use Zend\ServiceManager\Exception\ServiceNotCreatedException;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\Stdlib\ArrayObject as ZendArrayObject;
 
 /**
  * @author Pedro Alves <pedro.m.develop@gmail.com>
@@ -51,7 +52,7 @@ class ConnectionPoolFactory extends AbstractFactory
     }
     
     /**
-     * @param array|ArrayObject $config
+     * @param array|ArrayObject|ZendArrayObject $config
      * @param ConnectionFactoryInterface $connectionFactory
      * @return ConnectionInterface[]
      * @throws ServiceNotCreatedException

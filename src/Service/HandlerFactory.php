@@ -3,9 +3,9 @@
 namespace ElasticsearchModule\Service;
 
 use ArrayObject;
-use Zend\Stdlib\ArrayObject as ZendArrayObject;
 use Elasticsearch\ClientBuilder;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\Stdlib\ArrayObject as ZendArrayObject;
 
 /**
  * @author Pedro Alves <pedro.m.develop@gmail.com>
