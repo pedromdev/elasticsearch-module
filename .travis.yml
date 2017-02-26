@@ -11,12 +11,3 @@ before_install:
 install:
     - travis_retry composer install --no-interaction
     - composer show
-    
-build:
-    tests:
-        override:
-            -
-                command: 'phpunit --coverage-clover=build/coverage-clover.xml'
-                coverage:
-                    file: 'build/coverage-clover.xml'
-                    format: 'clover'
