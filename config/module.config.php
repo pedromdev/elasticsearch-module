@@ -1,11 +1,20 @@
 <?php
 
+use Elasticsearch\Client;
 use Elasticsearch\ConnectionPool\Selectors\RoundRobinSelector;
 use Elasticsearch\ConnectionPool\StaticNoPingConnectionPool;
-use Elasticsearch\Connections\ConnectionFactory;
+use Elasticsearch\Connections\ConnectionFactory as ElasticsearchConnectionFactory;
 use Elasticsearch\Serializers\SmartSerializer;
+use ElasticsearchModule\Service\ClientFactory;
+use ElasticsearchModule\Service\ConnectionFactory;
+use ElasticsearchModule\Service\ConnectionPoolFactory;
+use ElasticsearchModule\Service\EndpointFactory;
+use ElasticsearchModule\Service\HandlerFactory;
 use ElasticsearchModule\Service\Loggers\LoggerFactory;
 use ElasticsearchModule\Service\Loggers\TracerFactory;
+use ElasticsearchModule\Service\LoggersFactory;
+use ElasticsearchModule\Service\TransportFactory;
+use ElasticsearchModule\ServiceFactory\AbstractElasticsearchServiceFactory;
 use Psr\Log\NullLogger;
 
 return [
@@ -30,7 +39,7 @@ return [
         ],
         'connection_factory' => [
             'default' => [
-                'factory' => ConnectionFactory::class,
+                'factory' => ElasticsearchConnectionFactory::class,
                 'handler' => 'elasticsearch.handler.default',
                 'params' => [],
                 'serializer' => SmartSerializer::class,
@@ -65,6 +74,23 @@ return [
                 'transport' => 'elasticsearch.transport.default',
                 'endpoint' => 'elasticsearch.endpoint.default',
             ],
+        ],
+    ],
+    'elasticsearch_factories' => [
+        'loggers' => LoggersFactory::class,
+        'handler' => HandlerFactory::class,
+        'connection_factory' => ConnectionFactory::class,
+        'connection_pool' => ConnectionPoolFactory::class,
+        'transport' => TransportFactory::class,
+        'endpoint' => EndpointFactory::class,
+        'client' => ClientFactory::class,
+    ],
+    'service_manager' => [
+        'abstract_factories' => [
+            AbstractElasticsearchServiceFactory::class,
+        ],
+        'aliases' => [
+            Client::class => 'elasticsearch.client.default',
         ],
     ],
 ];
