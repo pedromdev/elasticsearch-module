@@ -88,7 +88,7 @@ class ConnectionPoolFactory extends AbstractFactory
     }
 
     /**
-     * @param array $host
+     * @param string $host
      *
      * @throws InvalidArgumentException
      * @return array

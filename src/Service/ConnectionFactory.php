@@ -25,7 +25,7 @@ class ConnectionFactory extends AbstractFactory
         $params = $this->getConnectionParametersFromConfiguration($config);
         $connectionFactory = new $factoryName($handler, $params, $serializer, $loggers['logger'], $loggers['tracer']);
         
-        if (! $connectionFactory instanceof ConnectionFactoryInterface) {
+        if (!$connectionFactory instanceof ConnectionFactoryInterface) {
             throw new ServiceNotCreatedException(sprintf(
                 "The '%s' class does not implements %s",
                 $factoryName,
