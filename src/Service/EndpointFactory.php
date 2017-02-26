@@ -28,7 +28,7 @@ class EndpointFactory extends AbstractFactory
         }
         $transport = $serviceLocator->get($config['transport']);
         
-        return function ($class) use ($transport, $serializer) {
+        return function($class) use ($transport, $serializer) {
             $endpointClass = "\\Elasticsearch\\Endpoints\\$class";
             
             if (in_array($class, ['Bulk', 'MSearch', 'MPercolate'])) {
