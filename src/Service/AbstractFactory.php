@@ -3,6 +3,7 @@
 namespace ElasticsearchModule\Service;
 
 use ArrayObject;
+use Zend\Stdlib\ArrayObject as ZendArrayObject;
 use Zend\ServiceManager\Exception\ServiceNotCreatedException;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -33,7 +34,7 @@ abstract class AbstractFactory implements FactoryInterface
     
     /**
      * @param ServiceLocatorInterface $serviceLocator
-     * @param array|ArrayObject $config
+     * @param array|ArrayObject|ZendArrayObject $config
      */
     abstract protected function create(ServiceLocatorInterface $serviceLocator, $config);
     

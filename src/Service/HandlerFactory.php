@@ -2,6 +2,8 @@
 
 namespace ElasticsearchModule\Service;
 
+use ArrayObject;
+use Zend\Stdlib\ArrayObject as ZendArrayObject;
 use Elasticsearch\ClientBuilder;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -32,10 +34,10 @@ class HandlerFactory extends AbstractFactory
     
     /**
      * @param ServiceLocatorInterface $serviceLocator
-     * @param array $handlerConfig
+     * @param array|ArrayObject|ZendArrayObject $handlerConfig
      * @return array
      */
-    private function getMultiHandlerParams(ServiceLocatorInterface $serviceLocator, array $handlerConfig)
+    private function getMultiHandlerParams(ServiceLocatorInterface $serviceLocator, $handlerConfig)
     {
         if (!isset($handlerConfig['params']['multi_handler'])) {
             return [];
@@ -49,10 +51,10 @@ class HandlerFactory extends AbstractFactory
     
     /**
      * @param ServiceLocatorInterface $serviceLocator
-     * @param array $handlerConfig
+     * @param array|ArrayObject|ZendArrayObject $handlerConfig
      * @return array
      */
-    private function getSingleHandlerParams(ServiceLocatorInterface $serviceLocator, array $handlerConfig)
+    private function getSingleHandlerParams(ServiceLocatorInterface $serviceLocator, $handlerConfig)
     {
         if (!isset($handlerConfig['params']['single_handler'])) {
             return [];
@@ -66,6 +68,7 @@ class HandlerFactory extends AbstractFactory
     
     /**
      * @param string $factoryKey
+     * @return array
      */
     private function createFactoryInConfig(ServiceLocatorInterface $serviceLocator, $handlerParams, $factoryKey)
     {
