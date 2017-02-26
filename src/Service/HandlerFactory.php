@@ -19,8 +19,8 @@ class HandlerFactory extends AbstractFactory
     protected function create(ServiceLocatorInterface $serviceLocator, $config)
     {
         return ClientBuilder::defaultHandler(
-            $this->getMultiHandlerParams($serviceLocator, $config),
-            $this->getSingleHandlerParams($serviceLocator, $config)
+            $this->getHandlerParams($serviceLocator, $config, 'multi_handler', 'handle_factory'),
+            $this->getHandlerParams($serviceLocator, $config, 'single_handler', 'factory')
         );
     }
 
@@ -35,34 +35,19 @@ class HandlerFactory extends AbstractFactory
     /**
      * @param ServiceLocatorInterface $serviceLocator
      * @param array|ArrayObject|ZendArrayObject $handlerConfig
+     * @param string $paramKey
+     * @param string $factoryKey
      * @return array
      */
-    private function getMultiHandlerParams(ServiceLocatorInterface $serviceLocator, $handlerConfig)
+    private function getHandlerParams(ServiceLocatorInterface $serviceLocator, $handlerConfig, $paramKey, $factoryKey)
     {
-        if (!isset($handlerConfig['params']['multi_handler'])) {
+        if (!isset($handlerConfig['params'][$paramKey])) {
             return [];
         }
         return $this->createFactoryInConfig(
             $serviceLocator,
-            $handlerConfig['params']['multi_handler'],
-            'handle_factory'
-        );
-    }
-    
-    /**
-     * @param ServiceLocatorInterface $serviceLocator
-     * @param array|ArrayObject|ZendArrayObject $handlerConfig
-     * @return array
-     */
-    private function getSingleHandlerParams(ServiceLocatorInterface $serviceLocator, $handlerConfig)
-    {
-        if (!isset($handlerConfig['params']['single_handler'])) {
-            return [];
-        }
-        return $this->createFactoryInConfig(
-            $serviceLocator,
-            $handlerConfig['params']['single_handler'],
-            'factory'
+            $handlerConfig['params'][$paramKey],
+            $factoryKey
         );
     }
     
