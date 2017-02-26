@@ -60,5 +60,11 @@ return [
                 'serializer' => SmartSerializer::class,
             ],
         ],
+        'client' => [
+            'default' => [
+                'transport' => 'elasticsearch.transport.default',
+                'endpoint' => 'elasticsearch.endpoint.default',
+            ],
+        ],
     ],
 ];
