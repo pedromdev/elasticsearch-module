@@ -12,8 +12,10 @@ use PHPUnit_Framework_MockObject_MockObject;
  */
 trait ConnectionFactoryTrait
 {
-    use HandlerDependencyTrait;
-    use LoggersDependencyTrait;
+    use HandlerDependencyTrait,
+        LoggersDependencyTrait,
+        HandlerTrait,
+        LoggersTrait;
     
     /**
      * @param array $config
@@ -21,17 +23,18 @@ trait ConnectionFactoryTrait
      */
     private function getContainerWithConnectionFactoryDependencies(array $config)
     {
-        $mock = $this->createServiceLocatorMock(['get']);
-        $this->mockConfigurationService($mock);
-        $mock2 = $this->createServiceLocatorMock(['get', 'has']);
-        $this->mockMappedReturn($mock2, 'get', [
+        $loggersContainer = $this->getContainerWithLoggersDependencies($this->getConfig());
+        $handlerContainer = $this->getContainerWithHandlerDependencies($this->getConfig());
+        
+        $connectionFactoryContainer = $this->createServiceLocatorMock(['get', 'has']);
+        $this->mockMappedReturn($connectionFactoryContainer, 'get', [
             'Config' => $config,
-            'elasticsearch.handler.default' => $this->getHandler($mock, 'default'),
-            'elasticsearch.loggers.default' => $this->getLoggers($mock, 'default'),
+            'elasticsearch.handler.default' => $this->getHandler($handlerContainer, 'default'),
+            'elasticsearch.loggers.default' => $this->getLoggers($loggersContainer, 'default'),
         ]);
-        $this->mockMappedReturn($mock2, 'has', [
+        $this->mockMappedReturn($connectionFactoryContainer, 'has', [
             SmartSerializer::class => false,
         ]);
-        return $mock2;
+        return $connectionFactoryContainer;
     }
 }

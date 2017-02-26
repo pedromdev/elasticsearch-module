@@ -2,7 +2,6 @@
 
 namespace ElasticsearchModuleTest\Traits\Tests;
 
-use Elasticsearch\Serializers\SmartSerializer;
 use ElasticsearchModuleTest\Traits\ConnectionFactoryDependencyTrait;
 use PHPUnit_Framework_MockObject_MockObject;
 
@@ -11,8 +10,8 @@ use PHPUnit_Framework_MockObject_MockObject;
  */
 trait ConnectionPoolTrait
 {
-    use ConnectionFactoryDependencyTrait;
-    use ConnectionFactoryTrait;
+    use ConnectionFactoryDependencyTrait,
+        ConnectionFactoryTrait;
     
     /**
      * @param array $config

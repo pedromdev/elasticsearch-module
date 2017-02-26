@@ -4,6 +4,7 @@ namespace ElasticsearchModuleTest\Service;
 
 use ArrayObject;
 use ElasticsearchModule\Service\LoggersFactory;
+use ElasticsearchModuleTest\Traits\Tests\LoggersTrait;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -11,14 +12,14 @@ use Psr\Log\LoggerInterface;
  */
 class LoggersFactoryTest extends AbstractFactoryTest
 {
+    use LoggersTrait;
     
     public function testCreateLoggersFromConfiguration()
     {
-        $mock = $this->createServiceLocatorMock(['get']);
-        $this->mockConfigurationService($mock);
+        $loggersContainer = $this->getContainerWithLoggersDependencies($this->getConfig());
         $factory = new LoggersFactory('default');
         
-        $loggers = $factory->createService($mock);
+        $loggers = $factory->createService($loggersContainer);
         
         $this->assertInstanceOf(ArrayObject::class, $loggers);
         $this->assertInstanceOf(LoggerInterface::class, $loggers['logger']);

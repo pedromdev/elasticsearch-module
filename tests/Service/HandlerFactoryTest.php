@@ -4,6 +4,7 @@ namespace ElasticsearchModuleTest\Service;
 
 use ElasticsearchModule\Service\HandlerFactory;
 use ElasticsearchModuleTest\Mock\Invokable;
+use ElasticsearchModuleTest\Traits\Tests\HandlerTrait;
 use stdClass;
 
 /**
@@ -11,14 +12,14 @@ use stdClass;
  */
 class HandlerFactoryTest extends AbstractFactoryTest
 {
+    use HandlerTrait;
     
     public function testCreateHandlerFromConfiguration()
     {
-        $mock = $this->createServiceLocatorMock(['get']);
-        $this->mockConfigurationService($mock);
+        $handlerContainer = $this->getContainerWithHandlerDependencies($this->getConfig());
         $factory = new HandlerFactory('default');
         
-        $this->assertCreation($factory, $mock);
+        $this->assertCreation($factory, $handlerContainer);
     }
     
     /**
@@ -27,45 +28,38 @@ class HandlerFactoryTest extends AbstractFactoryTest
      */
     public function testThrowsExceptionWhenHandlerConfigurationNotExist()
     {
-        $mock = $this->createServiceLocatorMock(['get']);
-        $this->mockConfigurationService($mock);
+        $handlerContainer = $this->getContainerWithHandlerDependencies($this->getConfig());
         $factory = new HandlerFactory('not-found');
         
-        $factory->createService($mock);
+        $factory->createService($handlerContainer);
     }
     
     public function testCreateHandlerWithoutParameters()
     {
-        $mock = $this->createServiceLocatorMock(['get']);
-        $this->mockMappedReturn($mock, 'get', [
-            'Config' => [
-                'elasticsearch' => [
-                    'handler' => [
-                        'default' => [],
-                    ],
+        $handlerContainer = $this->getContainerWithHandlerDependencies([
+            'elasticsearch' => [
+                'handler' => [
+                    'default' => [],
                 ],
             ],
         ]);
         $factory = new HandlerFactory('default');
         
-        $this->assertCreation($factory, $mock);
+        $this->assertCreation($factory, $handlerContainer);
     }
     
     public function testCreateInternalFactories()
     {
-        $mock = $this->createServiceLocatorMock(['get']);
-        $this->mockMappedReturn($mock, 'get', [
-            'Config' => [
-                'elasticsearch' => [
-                    'handler' => [
-                        'default' => [
-                            'params' => [
-                                'multi_handler' => [
-                                    'multi_factory' => function() {},
-                                ],
-                                'single_handler' => [
-                                    'factory' => Invokable::class,
-                                ],
+        $handlerContainer = $this->getContainerWithHandlerDependencies([
+            'elasticsearch' => [
+                'handler' => [
+                    'default' => [
+                        'params' => [
+                            'multi_handler' => [
+                                'multi_factory' => function() {},
+                            ],
+                            'single_handler' => [
+                                'factory' => Invokable::class,
                             ],
                         ],
                     ],
@@ -74,7 +68,7 @@ class HandlerFactoryTest extends AbstractFactoryTest
         ]);
         $factory = new HandlerFactory('default');
         
-        $this->assertCreation($factory, $mock);
+        $this->assertCreation($factory, $handlerContainer);
         
     }
     
