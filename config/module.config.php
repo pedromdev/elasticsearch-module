@@ -46,5 +46,13 @@ return [
                 'hosts' => [],
             ],
         ],
+        'transport' => [
+            'default' => [
+                'retries' => 2,
+                'sniff_on_start' => false,
+                'connection_pool' => 'elasticsearch.connection_pool.default',
+                'loggers' => 'elasticsearch.loggers.default',
+            ],
+        ],
     ],
 ];
