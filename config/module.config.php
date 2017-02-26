@@ -54,5 +54,11 @@ return [
                 'loggers' => 'elasticsearch.loggers.default',
             ],
         ],
+        'endpoint' => [
+            'default' => [
+                'transport' => 'elasticsearch.transport.default',
+                'serializer' => SmartSerializer::class,
+            ],
+        ],
     ],
 ];
