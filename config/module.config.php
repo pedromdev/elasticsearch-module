@@ -5,6 +5,7 @@ use Elasticsearch\ConnectionPool\Selectors\RoundRobinSelector;
 use Elasticsearch\ConnectionPool\StaticNoPingConnectionPool;
 use Elasticsearch\Connections\ConnectionFactory as ElasticsearchConnectionFactory;
 use Elasticsearch\Serializers\SmartSerializer;
+use ElasticsearchModule\Container\Endpoints;
 use ElasticsearchModule\Service\ClientFactory;
 use ElasticsearchModule\Service\ConnectionFactory;
 use ElasticsearchModule\Service\ConnectionPoolFactory;
@@ -65,6 +66,7 @@ return [
         ],
         'endpoint' => [
             'default' => [
+                'container' => Endpoints::class,
                 'transport' => 'elasticsearch.transport.default',
                 'serializer' => SmartSerializer::class,
             ],

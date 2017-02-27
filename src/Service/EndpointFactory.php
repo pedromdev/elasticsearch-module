@@ -3,6 +3,7 @@
 namespace ElasticsearchModule\Service;
 
 use Elasticsearch\Serializers\SerializerInterface;
+use ElasticsearchModule\Container\EndpointsInterface;
 use Zend\ServiceManager\Exception\ServiceNotCreatedException;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -20,23 +21,17 @@ class EndpointFactory extends AbstractFactory
         $serializer = $this->getServiceOrClassObject($serviceLocator, $config['serializer']);
         
         if (!$serializer instanceof SerializerInterface) {
-            throw new ServiceNotCreatedException(sprintf(
-                "The serializer must be instance of %s, %s given",
-                SerializerInterface::class,
-                is_object($serializer) ? get_class($serializer) : gettype($serializer)
-            ));
+            throw $this->getInvalidTypeException('serializer', SerializerInterface::class, $serializer);
         }
         $transport = $serviceLocator->get($config['transport']);
+        $container = $config['container'];
+        $container = new $container($transport, $serializer);
         
-        return function($class) use ($transport, $serializer) {
-            $endpointClass = "\\Elasticsearch\\Endpoints\\$class";
-            
-            if (in_array($class, ['Bulk', 'MSearch', 'MPercolate'])) {
-                return new $endpointClass($transport, $serializer);
-            } else {
-                return new $endpointClass($transport);
-            }
-        };
+        if (!$container instanceof EndpointsInterface) {
+            throw $this->getInvalidTypeException('container', EndpointsInterface::class, $container);
+        }
+        
+        return $container;
     }
 
     /**
@@ -45,5 +40,21 @@ class EndpointFactory extends AbstractFactory
     public function getServiceType()
     {
         return 'endpoint';
+    }
+    
+    /**
+     * @param string $name
+     * @param string $className
+     * @param mixed $var
+     * @return ServiceNotCreatedException
+     */
+    private function getInvalidTypeException($name, $className, $var)
+    {
+        return new ServiceNotCreatedException(sprintf(
+            "The %s must be instance of %s, %s given",
+            $name,
+            $className,
+            is_object($var) ? get_class($var) : gettype($var)
+        ));
     }
 }

@@ -3,6 +3,8 @@
 namespace ElasticsearchModuleTest\Service;
 
 use Elasticsearch\Endpoints\AbstractEndpoint;
+use Elasticsearch\Serializers\SmartSerializer;
+use ElasticsearchModule\Container\Endpoints;
 use ElasticsearchModule\Service\EndpointFactory;
 use ElasticsearchModuleTest\Traits\Tests\EndpointTrait;
 use stdClass;
@@ -35,6 +37,7 @@ class EndpointFactoryTest extends AbstractFactoryTest
             'elasticsearch' => [
                 'endpoint' => [
                     'default' => [
+                        'container' => Endpoints::class,
                         'serializer' => stdClass::class,
                         'transport' => 'elasticsearch.transport.default',
                     ],
@@ -44,5 +47,26 @@ class EndpointFactoryTest extends AbstractFactoryTest
         $factory = new EndpointFactory('default');
         
         $factory->createService($endpointContainer);
+    }
+    
+    /**
+     * @expectedException \Zend\ServiceManager\Exception\ServiceNotCreatedException
+     */
+    public function testThrowExceptionWhenAnInvalidEndpointContainer()
+    {
+        $endpointContainer = $this->getContainerWithEndpointDependencies([
+            'elasticsearch' => [
+                'endpoint' => [
+                    'default' => [
+                        'container' => stdClass::class,
+                        'serializer' => SmartSerializer::class,
+                        'transport' => 'elasticsearch.transport.default',
+                    ],
+                ],
+            ],
+        ]);
+        $factory = new EndpointFactory('default');
+        
+        $endpoint = $factory->createService($endpointContainer);
     }
 }
