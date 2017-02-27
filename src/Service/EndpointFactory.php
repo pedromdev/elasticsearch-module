@@ -52,20 +52,4 @@ class EndpointFactory extends AbstractFactory
     {
         return 'endpoint';
     }
-    
-    /**
-     * @param string $name
-     * @param string $className
-     * @param mixed $var
-     * @return ServiceNotCreatedException
-     */
-    private function getInvalidTypeException($name, $className, $var)
-    {
-        return new ServiceNotCreatedException(sprintf(
-            "The %s must be instance of %s, %s given",
-            $name,
-            $className,
-            is_object($var) ? get_class($var) : gettype($var)
-        ));
-    }
 }
