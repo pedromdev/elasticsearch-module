@@ -24,7 +24,7 @@ build:
     tests:
         override:
             -
-                command: 'phpunit --coverage-clover=build/coverage-clover.xml'
+                command: 'composer unit-tests'
                 coverage:
                     file: 'build/coverage-clover.xml'
                     format: 'clover'
