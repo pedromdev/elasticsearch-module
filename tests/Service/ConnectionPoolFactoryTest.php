@@ -22,10 +22,10 @@ class ConnectionPoolFactoryTest extends AbstractFactoryTest
      */
     public function testCreateConnectionPoolFromConfiguration(array $config)
     {
-        $mock = $this->getContainerWithConnectionPoolDependencies($config);
+        $connectionPoolContainer = $this->getContainerWithConnectionPoolDependencies($config);
         $factory = new ConnectionPoolFactory('default');
         
-        $connectionPool = $factory->createService($mock);
+        $connectionPool = $factory->createService($connectionPoolContainer);
         
         $this->assertInstanceOf(AbstractConnectionPool::class, $connectionPool);
     }
@@ -37,10 +37,10 @@ class ConnectionPoolFactoryTest extends AbstractFactoryTest
      */
     public function testThrowExceptionWhenHostHasInvalidType(array $config)
     {
-        $mock = $this->getContainerWithConnectionPoolDependencies($config);
+        $connectionPoolContainer = $this->getContainerWithConnectionPoolDependencies($config);
         $factory = new ConnectionPoolFactory('default');
         
-        $factory->createService($mock);
+        $factory->createService($connectionPoolContainer);
     }
     
     /**
@@ -52,10 +52,10 @@ class ConnectionPoolFactoryTest extends AbstractFactoryTest
             'scheme' => 'http',
             'port' => 9200,
         ]]);
-        $mock = $this->getContainerWithConnectionPoolDependencies($config);
+        $connectionPoolContainer = $this->getContainerWithConnectionPoolDependencies($config);
         $factory = new ConnectionPoolFactory('default');
         
-        $factory->createService($mock);
+        $factory->createService($connectionPoolContainer);
     }
     
     /**
@@ -67,10 +67,10 @@ class ConnectionPoolFactoryTest extends AbstractFactoryTest
     {
         $this->markTestIncomplete('This test cannot provide malformed URLs');
         $config = $this->getConfigWithHosts([$malformedURL]);
-        $mock = $this->getContainerWithConnectionPoolDependencies($config);
+        $connectionPoolContainer = $this->getContainerWithConnectionPoolDependencies($config);
         $factory = new ConnectionPoolFactory('default');
         
-        $factory->createService($mock);
+        $factory->createService($connectionPoolContainer);
     }
     
     /**
@@ -80,10 +80,26 @@ class ConnectionPoolFactoryTest extends AbstractFactoryTest
     {
         
         $config = $this->getConfigWithInvalidPoolClass();
-        $mock = $this->getContainerWithConnectionPoolDependencies($config);
+        $connectionPoolContainer = $this->getContainerWithConnectionPoolDependencies($config);
         $factory = new ConnectionPoolFactory('default');
         
-        $factory->createService($mock);
+        $factory->createService($connectionPoolContainer);
+    }
+    
+    /**
+     * @expectedException \Zend\ServiceManager\Exception\ServiceNotCreatedException
+     */
+    public function testThrowExceptionWhenConnectionFactoryVariableIsNotAnInstanceOfConnectionFactoryInterface()
+    {
+        $connectionPoolContainer = $this->createServiceLocatorMock(['get', 'has']);
+        $this->mockMappedReturn($connectionPoolContainer, 'get', [
+            'Config' => $this->getConfig(),
+            'elasticsearch.connection_factory.default' => new stdClass(),
+        ]);
+        $this->mockMappedReturn($connectionPoolContainer, 'has', ['elasticsearch.connection_factory.default' => true]);
+        $factory = new ConnectionPoolFactory('default');
+        
+        $factory->createService($connectionPoolContainer);
     }
     
     /**
