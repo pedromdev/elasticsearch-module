@@ -12,6 +12,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  */
 class TransportFactory extends AbstractFactory
 {
+    use InvalidTypeExceptionTrait;
  
     /**
      * {@inheritDoc}
@@ -23,11 +24,12 @@ class TransportFactory extends AbstractFactory
         $connectionPool = $serviceLocator->get($config['connection_pool']);
         
         if (!$connectionPool instanceof AbstractConnectionPool) {
-            throw new ServiceNotCreatedException(sprintf(
-                "The connection pool must be an instance of %s, %s given",
+            throw $this->getException(
+                'connection pool',
                 AbstractConnectionPool::class,
-                is_object($connectionPool) ? get_class($connectionPool) : gettype($connectionPool)
-            ));
+                ServiceNotCreatedException::class,
+                $connectionPool
+            );
         }
         $loggers = $serviceLocator->get($config['loggers']);
         

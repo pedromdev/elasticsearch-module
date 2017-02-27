@@ -16,6 +16,7 @@ use Zend\Stdlib\ArrayObject as ZendArrayObject;
  */
 class ConnectionPoolFactory extends AbstractFactory
 {
+    use InvalidTypeExceptionTrait;
     
     /**
      * {@inheritDoc}
@@ -35,11 +36,12 @@ class ConnectionPoolFactory extends AbstractFactory
         $connectionFactory = $this->getServiceOrClassObject($serviceLocator, $config['connection_factory']);
         
         if (!$connectionFactory instanceof ConnectionFactoryInterface) {
-            throw new ServiceNotCreatedException(sprintf(
-                "The connection factory must be an instace of %s, %s, given",
+            throw $this->getException(
+                'connection factory',
                 ConnectionFactoryInterface::class,
-                is_object($connectionFactory) ? get_class($connectionFactory) : gettype($connectionFactory)
-            ));
+                ServiceNotCreatedException::class,
+                $connectionFactory
+            );
         }
         $parameters = isset($config['parameters']) ? $config['parameters'] : [];
         $connections = $this->getConnectionsFromConfiguration($config, $connectionFactory);
