@@ -14,10 +14,8 @@ install:
 script:
     - composer unit-tests
     
-after_script:
+after_success:
     - export CI_BUILD_NUMBER="$TRAVIS_BUILD_NUMBER"
     - export CI_PULL_REQUEST="$TRAVIS_PULL_REQUEST"
     - export CI_BRANCH="$TRAVIS_BRANCH"
-    
-after_success:
     - travis_retry composer coveralls
