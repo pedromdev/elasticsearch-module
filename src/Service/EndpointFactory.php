@@ -12,6 +12,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  */
 class EndpointFactory extends AbstractFactory
 {
+    use InvalidTypeExceptionTrait;
     
     /**
      * {@inheritDoc}
@@ -21,14 +22,24 @@ class EndpointFactory extends AbstractFactory
         $serializer = $this->getServiceOrClassObject($serviceLocator, $config['serializer']);
         
         if (!$serializer instanceof SerializerInterface) {
-            throw $this->getInvalidTypeException('serializer', SerializerInterface::class, $serializer);
+            throw $this->getException(
+                'serializer',
+                SerializerInterface::class,
+                ServiceNotCreatedException::class,
+                $serializer
+            );
         }
         $transport = $serviceLocator->get($config['transport']);
         $container = $config['container'];
         $container = new $container($transport, $serializer);
         
         if (!$container instanceof EndpointsInterface) {
-            throw $this->getInvalidTypeException('container', EndpointsInterface::class, $container);
+            throw $this->getException(
+                'container',
+                EndpointsInterface::class,
+                ServiceNotCreatedException::class,
+                $container
+            );
         }
         
         return $container;
@@ -40,21 +51,5 @@ class EndpointFactory extends AbstractFactory
     public function getServiceType()
     {
         return 'endpoint';
-    }
-    
-    /**
-     * @param string $name
-     * @param string $className
-     * @param mixed $var
-     * @return ServiceNotCreatedException
-     */
-    private function getInvalidTypeException($name, $className, $var)
-    {
-        return new ServiceNotCreatedException(sprintf(
-            "The %s must be instance of %s, %s given",
-            $name,
-            $className,
-            is_object($var) ? get_class($var) : gettype($var)
-        ));
     }
 }

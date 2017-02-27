@@ -12,6 +12,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  */
 class ClientFactory extends AbstractFactory
 {
+    use InvalidTypeExceptionTrait;
     
     /**
      * {@inheritDoc}
@@ -21,11 +22,7 @@ class ClientFactory extends AbstractFactory
         $transport = $serviceLocator->get($config['transport']);
         
         if (!$transport instanceof Transport) {
-            throw new ServiceNotCreatedException(sprintf(
-                "The transport must be an instance of %s, %s given",
-                Transport::class,
-                is_object($transport) ? get_class($transport) : gettype($transport)
-            ));
+            throw $this->getException('transport', Transport::class, ServiceNotCreatedException::class, $transport);
         }
         $endpoint = $serviceLocator->get($config['endpoint']);
         return new Client($transport, $endpoint);
