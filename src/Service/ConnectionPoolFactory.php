@@ -33,6 +33,14 @@ class ConnectionPoolFactory extends AbstractFactory
         }
         $selector = $this->getServiceOrClassObject($serviceLocator, $config['selector']);
         $connectionFactory = $this->getServiceOrClassObject($serviceLocator, $config['connection_factory']);
+        
+        if (!$connectionFactory instanceof ConnectionFactoryInterface) {
+            throw new ServiceNotCreatedException(sprintf(
+                "The connection factory must be an instace of %s, %s, given",
+                ConnectionFactoryInterface::class,
+                is_object($connectionFactory) ? get_class($connectionFactory) : gettype($connectionFactory)
+            ));
+        }
         $parameters = isset($config['parameters']) ? $config['parameters'] : [];
         $connections = $this->getConnectionsFromConfiguration($config, $connectionFactory);
         return new $className(

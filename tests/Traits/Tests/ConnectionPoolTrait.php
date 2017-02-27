@@ -19,13 +19,13 @@ trait ConnectionPoolTrait
      */
     private function getContainerWithConnectionPoolDependencies(array $config)
     {
-        $mock = $this->getContainerWithConnectionFactoryDependencies($this->getConfig());
-        $mock2 = $this->createServiceLocatorMock(['get', 'has']);
-        $this->mockMappedReturn($mock2, 'get', [
+        $connectionFactoryContainer = $this->getContainerWithConnectionFactoryDependencies($this->getConfig());
+        $connectionPoolContainer = $this->createServiceLocatorMock(['get', 'has']);
+        $this->mockMappedReturn($connectionPoolContainer, 'get', [
             'Config' => $config,
-            'elasticsearch.connection_factory.default' => $this->getConnectionFactory($mock, 'default'),
+            'elasticsearch.connection_factory.default' => $this->getConnectionFactory($connectionFactoryContainer, 'default'),
         ]);
-        $this->mockMappedReturn($mock2, 'has', ['elasticsearch.connection_factory.default' => true]);
-        return $mock2;
+        $this->mockMappedReturn($connectionPoolContainer, 'has', ['elasticsearch.connection_factory.default' => true]);
+        return $connectionPoolContainer;
     }
 }

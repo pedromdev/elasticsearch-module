@@ -1,6 +1,6 @@
 # ElasticsearchModule for Zend Framework 2
 
-[![Build Status](https://scrutinizer-ci.com/g/pedromdev/elasticsearch-module/badges/build.png?b=master)](https://scrutinizer-ci.com/g/pedromdev/elasticsearch-module/build-status/master) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/pedromdev/elasticsearch-module/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/pedromdev/elasticsearch-module/?branch=master) [![Code Coverage](https://scrutinizer-ci.com/g/pedromdev/elasticsearch-module/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/pedromdev/elasticsearch-module/?branch=master)
+[![Build Status](https://travis-ci.org/pedromdev/elasticsearch-module.svg?branch=master)](https://travis-ci.org/pedromdev/elasticsearch-module) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/pedromdev/elasticsearch-module/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/pedromdev/elasticsearch-module/?branch=master) [![Coverage Status](https://coveralls.io/repos/github/pedromdev/elasticsearch-module/badge.svg?branch=dev)](https://coveralls.io/github/pedromdev/elasticsearch-module?branch=dev)
 
 Integration between the Elasticsearch-PHP client and Zend Framework 2
 
