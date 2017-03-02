@@ -72,17 +72,19 @@ Create a config/autoload/elasticsearch.global.php file with the below content:
 <?php
 
 return [
-    'connection_pool' => [
-        'default' => [
-            'hosts' => [
-                'http://localhost:9200', // string based
-                'http://username:password@localhost:9200', // if you have an authentication layer
-                [
-                    'scheme' => 'http', // associative array based
-                    'host' => 'localhost',
-                    'port' => 9200,
-                    'user' => 'username', // if you have an authentication layer
-                    'pass' => 'password',
+    'elasticsearch' => [
+        'connection_pool' => [
+            'default' => [
+                'hosts' => [
+                    'http://localhost:9200', // string based
+                    'http://username:password@localhost:9200', // if you have an authentication layer
+                    [
+                        'scheme' => 'http', // associative array based
+                        'host' => 'localhost',
+                        'port' => 9200,
+                        'user' => 'username', // if you have an authentication layer
+                        'pass' => 'password',
+                    ],
                 ],
             ],
         ],
