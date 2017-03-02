@@ -71,7 +71,7 @@ Create a config/autoload/elasticsearch.global.php file with the below content:
 ```php
 <?php
 
-reuturn [
+return [
     'connection_pool' => [
         'default' => [
             'hosts' => [
