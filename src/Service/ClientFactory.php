@@ -25,6 +25,10 @@ class ClientFactory extends AbstractFactory
             throw $this->getException('transport', Transport::class, ServiceNotCreatedException::class, $transport);
         }
         $endpoint = $container->get($config['endpoint']);
+        
+        if (!is_callable($endpoint)) {
+            throw $this->getException('endpoint', 'callable', ServiceNotCreatedException::class, $endpoint);
+        }
         return new Client($transport, $endpoint);
     }
 
