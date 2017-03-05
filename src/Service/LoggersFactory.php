@@ -3,7 +3,7 @@
 namespace ElasticsearchModule\Service;
 
 use ArrayObject;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Interop\Container\ContainerInterface;
 
 /**
  * @author Pedro Alves <pedro.m.develop@gmail.com>
@@ -14,7 +14,7 @@ class LoggersFactory extends AbstractFactory
     /**
      * {@inheritDoc}
      */
-    protected function create(ServiceLocatorInterface $serviceLocator, $config)
+    protected function create(ContainerInterface $container, $config)
     {
         $factories = $config['factories'];
         $loggers = [];
@@ -22,7 +22,7 @@ class LoggersFactory extends AbstractFactory
         foreach ($factories as $name => $factory) {
             if (in_array(AbstractFactory::class, class_parents($factory))) {
                 $factory = new $factory($this->getName());
-                $loggers[$name] = $factory->create($serviceLocator, $config);
+                $loggers[$name] = $factory->create($container, $config);
             }
         }
         return new ArrayObject($loggers);

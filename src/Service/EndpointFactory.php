@@ -4,8 +4,8 @@ namespace ElasticsearchModule\Service;
 
 use Elasticsearch\Serializers\SerializerInterface;
 use ElasticsearchModule\Container\EndpointsInterface;
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Exception\ServiceNotCreatedException;
-use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * @author Pedro Alves <pedro.m.develop@gmail.com>
@@ -17,9 +17,9 @@ class EndpointFactory extends AbstractFactory
     /**
      * {@inheritDoc}
      */
-    protected function create(ServiceLocatorInterface $serviceLocator, $config)
+    protected function create(ContainerInterface $container, $config)
     {
-        $serializer = $this->getServiceOrClassObject($serviceLocator, $config['serializer']);
+        $serializer = $this->getServiceOrClassObject($container, $config['serializer']);
         
         if (!$serializer instanceof SerializerInterface) {
             throw $this->getException(
@@ -29,20 +29,20 @@ class EndpointFactory extends AbstractFactory
                 $serializer
             );
         }
-        $transport = $serviceLocator->get($config['transport']);
-        $container = $config['container'];
-        $container = new $container($transport, $serializer);
+        $transport = $container->get($config['transport']);
+        $endpointContainer = $config['container'];
+        $endpointContainer = new $endpointContainer($transport, $serializer);
         
-        if (!$container instanceof EndpointsInterface) {
+        if (!$endpointContainer instanceof EndpointsInterface) {
             throw $this->getException(
                 'container',
                 EndpointsInterface::class,
                 ServiceNotCreatedException::class,
-                $container
+                $endpointContainer
             );
         }
         
-        return $container;
+        return $endpointContainer;
     }
 
     /**

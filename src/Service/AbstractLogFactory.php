@@ -2,9 +2,9 @@
 
 namespace ElasticsearchModule\Service;
 
+use Interop\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Zend\ServiceManager\Exception\ServiceNotCreatedException;
-use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * @author Pedro Alves <pedro.m.develop@gmail.com>
@@ -15,10 +15,10 @@ abstract class AbstractLogFactory extends AbstractFactory
     /**
      * {@inheritDoc}
      */
-    protected function create(ServiceLocatorInterface $serviceLocator, $config)
+    protected function create(ContainerInterface $container, $config)
     {
         $logName = $config[$this->getKey()];
-        return $this->getLoggerOrThrowException($serviceLocator, $logName);
+        return $this->getLoggerOrThrowException($container, $logName);
     }
 
     /**
@@ -30,14 +30,14 @@ abstract class AbstractLogFactory extends AbstractFactory
     }
     
     /**
-     * @param ServiceLocatorInterface $serviceLocator
+     * @param ContainerInterface $container
      * @param string $logName
      * @return LoggerInterface
      * @throws ServiceNotCreatedException
      */
-    private function getLoggerOrThrowException(ServiceLocatorInterface $serviceLocator, $logName)
+    private function getLoggerOrThrowException(ContainerInterface $container, $logName)
     {
-        $logger = $this->getServiceOrClassObject($serviceLocator, $logName);
+        $logger = $this->getServiceOrClassObject($container, $logName);
         
         if (!$logger instanceof LoggerInterface) {
             throw new ServiceNotCreatedException("There is no '$logName' log");

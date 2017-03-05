@@ -2,8 +2,9 @@
 
 namespace ElasticsearchModule\ServiceFactory;
 
-use Zend\ServiceManager\AbstractFactoryInterface;
-use Zend\ServiceManager\FactoryInterface;
+use Interop\Container\ContainerInterface;
+use Zend\ServiceManager\Factory\AbstractFactoryInterface;
+use Zend\ServiceManager\Factory\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -11,30 +12,30 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  */
 class AbstractElasticsearchServiceFactory implements AbstractFactoryInterface
 {
-    
+
     /**
      * {@inheritDoc}
      */
-    public function canCreateServiceWithName(ServiceLocatorInterface $serviceLocator, $name, $requestedName)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        return $this->getFactory($serviceLocator, $requestedName) !== null;
+        $factory = $this->getFactory($container, $requestedName);
+        return $factory($container, $requestedName);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function createServiceWithName(ServiceLocatorInterface $serviceLocator, $name, $requestedName)
+    public function canCreate(ContainerInterface $container, $requestedName)
     {
-        $factory = $this->getFactory($serviceLocator, $requestedName);
-        return $factory->createService($serviceLocator);
+        return $this->getFactory($container, $requestedName) !== null;
     }
 
     /**
-     * @param ServiceLocatorInterface $serviceLocator
+     * @param ContainerInterface $container
      * @param string $requestedName
      * @return FactoryInterface
      */
-    private function getFactory(ServiceLocatorInterface $serviceLocator, $requestedName)
+    private function getFactory(ContainerInterface $container, $requestedName)
     {
         $pattern = "/^elasticsearch\.(?P<serviceType>[a-z0-9_-]+)\.(?P<serviceName>[a-z0-9_-]+)$/";
         $matches = [];
@@ -44,7 +45,7 @@ class AbstractElasticsearchServiceFactory implements AbstractFactoryInterface
         }
         $serviceType = $matches['serviceType'];
         $serviceName = $matches['serviceName'];
-        $config = $serviceLocator->get('Config');
+        $config = $container->get('Config');
         $elasticsearchModuleConfig = $config['elasticsearch'];
         
         if (!isset($elasticsearchModuleConfig[$serviceType]) ||

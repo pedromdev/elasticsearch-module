@@ -6,9 +6,9 @@ use ArrayObject;
 use Elasticsearch\ConnectionPool\AbstractConnectionPool;
 use Elasticsearch\Connections\ConnectionFactoryInterface;
 use Elasticsearch\Connections\ConnectionInterface;
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Exception\InvalidArgumentException;
 use Zend\ServiceManager\Exception\ServiceNotCreatedException;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Stdlib\ArrayObject as ZendArrayObject;
 
 /**
@@ -21,7 +21,7 @@ class ConnectionPoolFactory extends AbstractFactory
     /**
      * {@inheritDoc}
      */
-    protected function create(ServiceLocatorInterface $serviceLocator, $config)
+    protected function create(ContainerInterface $container, $config)
     {
         $className = $config['class'];
         
@@ -32,8 +32,8 @@ class ConnectionPoolFactory extends AbstractFactory
                 AbstractConnectionPool::class
             ));
         }
-        $selector = $this->getServiceOrClassObject($serviceLocator, $config['selector']);
-        $connectionFactory = $this->getServiceOrClassObject($serviceLocator, $config['connection_factory']);
+        $selector = $this->getServiceOrClassObject($container, $config['selector']);
+        $connectionFactory = $this->getServiceOrClassObject($container, $config['connection_factory']);
         
         if (!$connectionFactory instanceof ConnectionFactoryInterface) {
             throw $this->getException(

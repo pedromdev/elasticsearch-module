@@ -4,8 +4,8 @@ namespace ElasticsearchModule\Service;
 
 use ArrayObject;
 use Elasticsearch\Connections\ConnectionFactoryInterface;
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Exception\ServiceNotCreatedException;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Stdlib\ArrayObject as ZendArrayObject;
 
 /**
@@ -17,12 +17,12 @@ class ConnectionFactory extends AbstractFactory
     /**
      * {@inheritDoc}
      */
-    protected function create(ServiceLocatorInterface $serviceLocator, $config)
+    protected function create(ContainerInterface $container, $config)
     {
         $factoryName = $config['factory'];
-        $handler = $serviceLocator->get($config['handler']);
-        $loggers = $serviceLocator->get($config['loggers']);
-        $serializer = $this->getServiceOrClassObject($serviceLocator, $config['serializer']);
+        $handler = $container->get($config['handler']);
+        $loggers = $container->get($config['loggers']);
+        $serializer = $this->getServiceOrClassObject($container, $config['serializer']);
         $params = $this->getConnectionParametersFromConfiguration($config);
         $connectionFactory = new $factoryName($handler, $params, $serializer, $loggers['logger'], $loggers['tracer']);
         

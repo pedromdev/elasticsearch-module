@@ -41,4 +41,22 @@ class ClientFactoryTest extends AbstractFactoryTest
         
         $factory->createService($clientContainer);
     }
+    
+    /**
+     * @expectedException \Zend\ServiceManager\Exception\ServiceNotCreatedException
+     */
+    public function testThrowExceptionWhenEndpointVariableIsNotACallable()
+    {
+        $config = $this->getConfig();
+        $transportContainer = $this->getContainerWithTransportDependencies($config);
+        $clientContainer = $this->createServiceLocatorMock(['get']);
+        $this->mockMappedReturn($clientContainer, 'get', [
+            'Config' => $config,
+            'elasticsearch.transport.default' => $this->getTransport($transportContainer, 'default'),
+            'elasticsearch.endpoint.default' => new stdClass(),
+        ]);
+        $factory = new ClientFactory('default');
+        
+        $factory->createService($clientContainer);
+    }
 }

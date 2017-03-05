@@ -8,7 +8,6 @@ use Elasticsearch\ConnectionPool\AbstractConnectionPool;
 use Elasticsearch\Connections\ConnectionFactoryInterface;
 use Elasticsearch\Transport;
 use ElasticsearchModuleTest\Service\AbstractTest;
-use Zend\ServiceManager\Config;
 use Zend\ServiceManager\ServiceManager;
 
 /**
@@ -25,7 +24,7 @@ class AbstractElasticsearchServiceFactoryTest extends AbstractTest
     {
         parent::setUp();
         $config = $this->getConfig();
-        $this->serviceManager = new ServiceManager(new Config($config['service_manager']));
+        $this->serviceManager = new ServiceManager($config['service_manager']);
         $this->serviceManager->setService('Config', $config);
     }
     

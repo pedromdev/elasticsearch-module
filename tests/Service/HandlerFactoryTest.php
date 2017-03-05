@@ -24,7 +24,7 @@ class HandlerFactoryTest extends AbstractFactoryTest
     
     /**
      * @expectedException \Zend\ServiceManager\Exception\ServiceNotCreatedException
-     * @expectedExceptionMessage elasticserach.handler.not-found could not be found
+     * @expectedExceptionMessage elasticsearch.handler.not-found could not be found
      */
     public function testThrowsExceptionWhenHandlerConfigurationNotExist()
     {

@@ -4,7 +4,8 @@ namespace ElasticsearchModule\Service;
 
 use ArrayObject;
 use Elasticsearch\ClientBuilder;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface as ContainerInterface2;
 use Zend\Stdlib\ArrayObject as ZendArrayObject;
 
 /**
@@ -16,11 +17,11 @@ class HandlerFactory extends AbstractFactory
     /**
      * {@inheritDoc}
      */
-    protected function create(ServiceLocatorInterface $serviceLocator, $config)
+    protected function create(ContainerInterface $container, $config)
     {
         return ClientBuilder::defaultHandler(
-            $this->getHandlerParams($serviceLocator, $config, 'multi_handler', 'handle_factory'),
-            $this->getHandlerParams($serviceLocator, $config, 'single_handler', 'factory')
+            $this->getHandlerParams($container, $config, 'multi_handler', 'handle_factory'),
+            $this->getHandlerParams($container, $config, 'single_handler', 'factory')
         );
     }
 
@@ -33,33 +34,35 @@ class HandlerFactory extends AbstractFactory
     }
     
     /**
-     * @param ServiceLocatorInterface $serviceLocator
+     * @param ContainerInterface2 $container
      * @param array|ArrayObject|ZendArrayObject $handlerConfig
      * @param string $paramKey
      * @param string $factoryKey
      * @return array
      */
-    private function getHandlerParams(ServiceLocatorInterface $serviceLocator, $handlerConfig, $paramKey, $factoryKey)
+    private function getHandlerParams(ContainerInterface $container, $handlerConfig, $paramKey, $factoryKey)
     {
         if (!isset($handlerConfig['params'][$paramKey])) {
             return [];
         }
         return $this->createFactoryInConfig(
-            $serviceLocator,
+            $container,
             $handlerConfig['params'][$paramKey],
             $factoryKey
         );
     }
     
     /**
+     * @param ContainerInterface $container
+     * @param array $handlerParams
      * @param string $factoryKey
      * @return array
      */
-    private function createFactoryInConfig(ServiceLocatorInterface $serviceLocator, $handlerParams, $factoryKey)
+    private function createFactoryInConfig(ContainerInterface $container, $handlerParams, $factoryKey)
     {
         if ($this->hasHandlerFactoryOption($handlerParams, $factoryKey)) {
             $serviceOrClass = $handlerParams[$factoryKey];
-            $handlerParams[$factoryKey] = $this->getServiceOrClassObject($serviceLocator, $serviceOrClass);
+            $handlerParams[$factoryKey] = $this->getServiceOrClassObject($container, $serviceOrClass);
             
             if (!is_callable($handlerParams[$factoryKey])) {
                 unset($handlerParams[$factoryKey]);
