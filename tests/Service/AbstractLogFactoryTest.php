@@ -38,7 +38,7 @@ abstract class AbstractLogFactoryTest extends AbstractFactoryTest
     
     /**
      * @expectedException \Zend\ServiceManager\Exception\ServiceNotCreatedException
-     * @expectedExceptionMessage elasticserach.loggers.exception could not be found
+     * @expectedExceptionMessage elasticsearch.loggers.exception could not be found
      */
     public function testThrowsExceptionWhenNotFindTheLogConfig()
     {

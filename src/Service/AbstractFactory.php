@@ -3,10 +3,11 @@
 namespace ElasticsearchModule\Service;
 
 use ArrayObject;
-use Zend\Stdlib\ArrayObject as ZendArrayObject;
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Exception\ServiceNotCreatedException;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\Stdlib\ArrayObject as ZendArrayObject;
 
 /**
  * @author Pedro Alves <pedro.m.develop@gmail.com>
@@ -33,10 +34,10 @@ abstract class AbstractFactory implements FactoryInterface
     abstract public function getServiceType();
     
     /**
-     * @param ServiceLocatorInterface $serviceLocator
+     * @param ContainerInterface $container
      * @param array|ArrayObject|ZendArrayObject $config
      */
-    abstract protected function create(ServiceLocatorInterface $serviceLocator, $config);
+    abstract protected function create(ContainerInterface $container, $config);
     
     /**
      * @param ServiceLocatorInterface $serviceLocator
@@ -45,25 +46,35 @@ abstract class AbstractFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $config = $serviceLocator->get('Config');
-        $serviceType = $this->getServiceType();
-        
-        if (!isset($config['elasticsearch'][$serviceType][$this->name])) {
-            throw new ServiceNotCreatedException("elasticserach.$serviceType.{$this->name} could not be found");
-        }
-        
-        return $this->create($serviceLocator, $config['elasticsearch'][$serviceType][$this->name]);
+        return $this($serviceLocator, sprintf('elasticsearch.%s.%s', $this->getServiceType(), $this->name));
     }
     
     /**
-     * @param ServiceLocatorInterface $serviceLocator
+     * @param ContainerInterface $container
+     * @return mixed
+     * @throws ServiceNotCreatedException
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $config = $container->get('Config');
+        $serviceType = $this->getServiceType();
+        
+        if (!isset($config['elasticsearch'][$serviceType][$this->name])) {
+            throw new ServiceNotCreatedException("$requestedName could not be found");
+        }
+        
+        return $this->create($container, $config['elasticsearch'][$serviceType][$this->name]);
+    }
+    
+    /**
+     * @param ContainerInterface $container
      * @param string $serviceOrClass
      * @return mixed
      */
-    protected function getServiceOrClassObject(ServiceLocatorInterface $serviceLocator, $serviceOrClass)
+    protected function getServiceOrClassObject(ContainerInterface $container, $serviceOrClass)
     {
-        if ($serviceLocator->has($serviceOrClass)) {
-            return $serviceLocator->get($serviceOrClass);
+        if ($container->has($serviceOrClass)) {
+            return $container->get($serviceOrClass);
         } else if (class_exists($serviceOrClass)) {
             return new $serviceOrClass();
         }
